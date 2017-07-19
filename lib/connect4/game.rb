@@ -80,20 +80,62 @@ module Connect4
 
     def check_win(row, col, player)
       # check row
-      if (board[row][col...(col+4)].length == 4 && board[row][col...(col+4)].all? { |v| v == player.color }) ||
-        (board[row][(col-4)...col].length == 4 && board[row][(col-4)...col].all? { |v| v == player.color })
+      if check_row(row, col, player)
         player.won = true
       end
 
-      # check col
-      if (!board[row...(row+4)][col].nil? && board[row...(row+4)][col].length == 4 && board[row...(row+4)][col].all? { |v| v == player.color }) ||
-        (!board[(row-4)...row][col].nil? && board[(row-4)...row][col].length == 4 && board[(row-4)...(row)][col].all? { |v| v == player.color })
+      # check column
+      if check_column(row, col, player)
         player.won = true
       end
 
       # check diagonal left
       if (check_diagonal(row, col, player))
         player.won = true
+      end
+    end
+
+    def check_row(row, col, player)
+      count = 0
+      move = 1
+
+      while (col + move) < col_length && board[row][col + move] == player.color
+        count += 1
+        move += 1
+      end
+
+      move = 1
+      while (col - move) >= 0 && board[row][col - move] == player.color
+        count += 1
+        move += 1
+      end
+
+      if count >= 3
+        true
+      else
+        false
+      end
+    end
+
+    def check_column(row, col, player)
+      count = 0
+      move = 1
+
+      while (row + move) < row_length && board[row + move][col] == player.color
+        count += 1
+        move += 1
+      end
+
+      move = 1
+      while (row - move) >= 0 && board[row - move][col] == player.color
+        count += 1
+        move += 1
+      end
+
+      if count >= 3
+        true
+      else
+        false
       end
     end
 
